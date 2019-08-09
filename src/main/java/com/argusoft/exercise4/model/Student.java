@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 @Entity
 @Table(name = "student")
@@ -24,7 +25,7 @@ public class Student {
     private String middleName;
     @Column(name = "lastName")
     private String lastName;
-    @Column(name = "email")
+    @Column(name = "email",length = 40) @Email
     private String email;
     @Column(name = "phone")
     private String phone;

@@ -28,6 +28,12 @@
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <name>exercise-4</name>
 </project>
