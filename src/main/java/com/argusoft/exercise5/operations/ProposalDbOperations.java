@@ -62,7 +62,7 @@ public class ProposalDbOperations {
         return msgList;
     }
 
-    public static Proposal findRecordById(Integer proposalId) {
+    public static Proposal findRecordById(Long proposalId) {
         Proposal findObj = null;
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
@@ -79,14 +79,13 @@ public class ProposalDbOperations {
         return findObj;
     }
 
-    public static void updateRecord(int proposalId, String message) {
+    public static void updateRecord(Proposal proposal) {
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
-            Proposal msg = (Proposal) sessionObj.get(Proposal.class, proposalId);
-//            msg.setMessage(message);
+            sessionObj.update(proposal);
             sessionObj.getTransaction().commit();
-            logger.info("\nMessage With Id?= " + proposalId + " Is Successfully Updated In The Database!\n");
+            logger.info("\nMessage With Id?= " + proposal.getId() + " Is Successfully Updated In The Database!\n");
         } catch (Exception sqlException) {
             if (null != sessionObj.getTransaction()) {
                 logger.info("\n.......Transaction Is Being Rolled Back.......\n");
@@ -100,7 +99,7 @@ public class ProposalDbOperations {
         }
     }
 
-    public static void deleteRecord(Integer proposalId) {
+    public static void deleteRecord(Long proposalId) {
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();

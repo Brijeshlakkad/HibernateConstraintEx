@@ -5,7 +5,6 @@
  */
 package com.argusoft.exercise5.model;
 
-import java.sql.Blob;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.persistence.Column;
@@ -34,8 +33,8 @@ public class Attachment {
     @Column(name = "created", nullable = false)
     private Timestamp created;
 
-    @Column(name = "attachmentBytes")
-    private String attachmentBytes;
+    @Column(name = "attachmentBytes",length=20000)
+    private byte[] attachmentBytes;
 
 //    @ManyToOne
 //    private Proposal proposal;
@@ -43,11 +42,11 @@ public class Attachment {
 
     }
 
-    public Attachment(String fileName, String fileSize, Timestamp created, Blob blob) {
+    public Attachment(String fileName, String fileSize, Timestamp created, byte[] blob) {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.created = created;
-        this.attachmentBytes = "B";
+        this.attachmentBytes = blob;
     }
 
 //    public Proposal getProposal() {
@@ -89,11 +88,11 @@ public class Attachment {
         this.created = created;
     }
 
-    public String getAttachmentBytes() {
+    public byte[] getAttachmentBytes() {
         return attachmentBytes;
     }
 
-    public void setAttachmentBytes(String attachmentBytes) {
+    public void setAttachmentBytes(byte[] attachmentBytes) {
         this.attachmentBytes = attachmentBytes;
     }
 
