@@ -22,7 +22,7 @@ public class ProposalDbOperations {
     public final static Logger logger = Logger.getLogger(ProposalDbOperations.class);
     static Session sessionObj;
 
-    public static void createRecord(Proposal proposal)  {
+    public static void createRecord(Proposal proposal) {
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
@@ -68,7 +68,7 @@ public class ProposalDbOperations {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
 
-            findObj = (Proposal) sessionObj.load(Proposal.class, proposalId);
+            findObj = (Proposal) sessionObj.get(Proposal.class, proposalId);
         } catch (Exception sqlException) {
             if (null != sessionObj.getTransaction()) {
                 logger.info("\n.......Transaction Is Being Rolled Back.......\n");

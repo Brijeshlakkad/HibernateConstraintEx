@@ -7,17 +7,10 @@ package com.argusoft.exercise5.operations;
 
 import com.argusoft.exercise5.model.Attachment;
 import com.argusoft.exercise5.utils.HibernateUtility;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 /**
@@ -29,16 +22,11 @@ public class AttachmentDbOperations {
     public final static Logger logger = Logger.getLogger(AttachmentDbOperations.class);
     static Session sessionObj;
 
-    public static void createRecord(Attachment attachment, String photoFilePath) throws IOException, SQLException {
+    public static void createRecord(Attachment attachment) {
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
-            File file = new File(photoFilePath);
-            FileInputStream inputStream = new FileInputStream(file);
-            Blob blob = Hibernate.getLobCreator(sessionObj)
-                    .createBlob(inputStream, file.length());
             sessionObj.save(attachment);
-            blob.free();
             sessionObj.getTransaction().commit();
         } catch (Exception sqlException) {
             if (sessionObj.getTransaction() != null) {
@@ -54,18 +42,12 @@ public class AttachmentDbOperations {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Attachment> displayRecords(String photoFilePath) {
+    public static List<Attachment> displayRecords() {
         List<Attachment> msgList = new ArrayList<Attachment>();
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
             msgList = (List<Attachment>) sessionObj.createQuery("FROM Attachment").list();
-            int i = 0;
-            for (Attachment msg : msgList) {
-                byte[] blobBytes = msg.getAttachmentBytes();
-                saveBytesToFile(photoFilePath + "-" + i, blobBytes);
-                i++;
-            }
         } catch (Exception sqlException) {
             if (null != sessionObj.getTransaction()) {
                 logger.info("\n.......Transaction Is Being Rolled Back.......\n");
@@ -80,23 +62,12 @@ public class AttachmentDbOperations {
         return msgList;
     }
 
-    private static void saveBytesToFile(String filePath, byte[] fileBytes) throws IOException {
-        FileOutputStream outputStream = new FileOutputStream(filePath);
-        outputStream.write(fileBytes);
-        outputStream.close();
-    }
-
-    public static Attachment findRecordById(Integer attachmentId, String photoFilePath) {
+    public static Attachment findRecordById(Integer attachmentId) {
         Attachment findObj = null;
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
-
-            findObj = (Attachment) sessionObj.load(Attachment.class, attachmentId);
-            if (photoFilePath != null) {
-                byte[] photobytes = findObj.getAttachmentBytes();
-                saveBytesToFile(photoFilePath, photobytes);
-            }
+            findObj = (Attachment) sessionObj.get(Attachment.class, attachmentId);
         } catch (Exception sqlException) {
             if (null != sessionObj.getTransaction()) {
                 logger.info("\n.......Transaction Is Being Rolled Back.......\n");
@@ -107,14 +78,13 @@ public class AttachmentDbOperations {
         return findObj;
     }
 
-    public static void updateRecord(int attachmentId, String message) {
+    public static void updateRecord(Attachment attachment) {
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
-            Attachment msg = (Attachment) sessionObj.get(Attachment.class, attachmentId);
-//            msg.setMessage(message);
+            sessionObj.update(attachment);
             sessionObj.getTransaction().commit();
-            logger.info("\nMessage With Id?= " + attachmentId + " Is Successfully Updated In The Database!\n");
+            logger.info("\nMessage With Id?= " + attachment.getId() + " Is Successfully Updated In The Database!\n");
         } catch (Exception sqlException) {
             if (null != sessionObj.getTransaction()) {
                 logger.info("\n.......Transaction Is Being Rolled Back.......\n");
@@ -132,10 +102,8 @@ public class AttachmentDbOperations {
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
-
-            Attachment msg = findRecordById(attachmentId, null);
+            Attachment msg = findRecordById(attachmentId);
             sessionObj.delete(msg);
-
             sessionObj.getTransaction().commit();
             logger.info("\nAttachment With Id?= " + attachmentId + " Is Successfully Deleted From The Database!\n");
         } catch (Exception sqlException) {

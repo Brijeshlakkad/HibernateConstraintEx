@@ -29,16 +29,11 @@ public class PersonnelDbOperations {
     public final static Logger logger = Logger.getLogger(PersonnelDbOperations.class);
     static Session sessionObj;
 
-    public static void createRecord(Personnel personnel, String photoFilePath) throws IOException, SQLException {
+    public static void createRecord(Personnel personnel) {
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
-            File file = new File(photoFilePath);
-            FileInputStream inputStream = new FileInputStream(file);
-            Blob blob = Hibernate.getLobCreator(sessionObj)
-                    .createBlob(inputStream, file.length());
             sessionObj.save(personnel);
-            blob.free();
             sessionObj.getTransaction().commit();
         } catch (Exception sqlException) {
             if (sessionObj.getTransaction() != null) {
@@ -80,7 +75,7 @@ public class PersonnelDbOperations {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
 
-            findObj = (Personnel) sessionObj.load(Personnel.class, personnelId);
+            findObj = (Personnel) sessionObj.get(Personnel.class, personnelId);
         } catch (Exception sqlException) {
             if (null != sessionObj.getTransaction()) {
                 logger.info("\n.......Transaction Is Being Rolled Back.......\n");
@@ -115,7 +110,6 @@ public class PersonnelDbOperations {
         try {
             sessionObj = HibernateUtility.buildSessionFactory();
             sessionObj.beginTransaction();
-
             Personnel msg = findRecordById(personnelId);
             sessionObj.delete(msg);
             sessionObj.getTransaction().commit();

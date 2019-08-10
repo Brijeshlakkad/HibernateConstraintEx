@@ -24,11 +24,11 @@ public class Proposal {
     private String comment;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "personnel_id", referencedColumnName = "id")
+    @JoinColumn(name = "proposal_id", referencedColumnName = "id")
     List<Personnel> personnels;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "attachment_id", referencedColumnName = "id")
+    @JoinColumn(name = "proposal_id", referencedColumnName = "id")
     List<Attachment> attachments;
 
     public Proposal() {
