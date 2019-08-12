@@ -1,12 +1,15 @@
 package com.argusoft.exercise6.model;
 
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import org.hibernate.annotations.CreationTimestamp;
 
 /**
  *
@@ -23,8 +26,16 @@ public class Bid {
     private long amount;
 
     @Column(name = "created")
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @CreationTimestamp
     private Date created;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "item_id", nullable = false)
+    private Item item_id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "buyer", nullable = false)
+    private User buyer;
 
     public Bid(long amount, Date created) {
         this.amount = amount;
@@ -53,6 +64,22 @@ public class Bid {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public Item getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(Item item_id) {
+        this.item_id = item_id;
+    }
+
+    public User getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(User buyer) {
+        this.buyer = buyer;
     }
 
     @Override

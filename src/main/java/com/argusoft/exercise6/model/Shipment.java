@@ -1,12 +1,17 @@
 package com.argusoft.exercise6.model;
 
+import java.time.LocalDate;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
 
 /**
  *
@@ -26,10 +31,27 @@ public class Shipment {
     private String state;
 
     @Column(name = "created")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date created;
+    @CreationTimestamp
+    @NotNull
+    private LocalDate created;
 
-    public Shipment(int inspectionPeriodDays, String state, Date created) {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "item_id", nullable = false)
+    private Item item_id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "buyer_id", nullable = false)
+    private User buyer;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_id", nullable = false)
+    private User seller;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address dilivery;
+
+    public Shipment(int inspectionPeriodDays, String state, LocalDate created) {
         this.inspectionPeriodDays = inspectionPeriodDays;
         this.state = state;
         this.created = created;
@@ -59,12 +81,44 @@ public class Shipment {
         this.state = state;
     }
 
-    public Date getCreated() {
+    public LocalDate getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(LocalDate created) {
         this.created = created;
+    }
+
+    public Item getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(Item item_id) {
+        this.item_id = item_id;
+    }
+
+    public User getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(User buyer) {
+        this.buyer = buyer;
+    }
+
+    public User getSeller() {
+        return seller;
+    }
+
+    public void setSeller(User seller) {
+        this.seller = seller;
+    }
+
+    public Address getDilivery() {
+        return dilivery;
+    }
+
+    public void setDilivery(Address dilivery) {
+        this.dilivery = dilivery;
     }
 
     @Override

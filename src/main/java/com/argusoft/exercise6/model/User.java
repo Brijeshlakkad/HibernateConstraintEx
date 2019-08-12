@@ -1,10 +1,16 @@
 package com.argusoft.exercise6.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
@@ -44,6 +50,18 @@ public class User {
 
     @Column(name = "admin")
     private boolean admin;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Address> addresses = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<BillingDetails> billings = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_id")
+    private List<Item> items = new ArrayList<>();
 
     public User(String firstName, String middleName, String lastName, String userName, String password, String email, int ranking, boolean admin) {
         this.firstName = firstName;
@@ -126,6 +144,30 @@ public class User {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+
+    public List<BillingDetails> getBillings() {
+        return billings;
+    }
+
+    public void setBillings(List<BillingDetails> billings) {
+        this.billings = billings;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     @Override

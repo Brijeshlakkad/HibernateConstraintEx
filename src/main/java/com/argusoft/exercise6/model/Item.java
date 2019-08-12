@@ -1,12 +1,18 @@
 package com.argusoft.exercise6.model;
 
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
 
 /**
  *
@@ -42,9 +48,17 @@ public class Item {
     @Column(name = "state")
     private String state;
 
-    @Column(name = "approvalDateTime")
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name = "approvaldatetime")
+    @CreationTimestamp
+    @NotNull
     private Date approvalDateTime;
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    private User seller;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category", nullable = false)
+    private Category category;
 
     public Item(String firstName, String description, long initialPrice, long reservePrice, Date startDate, Date endDate, String state, Date approvalDateTime) {
         this.firstName = firstName;
@@ -127,6 +141,22 @@ public class Item {
 
     public void setApprovalDateTime(Date approvalDateTime) {
         this.approvalDateTime = approvalDateTime;
+    }
+
+    public User getSeller() {
+        return seller;
+    }
+
+    public void setSeller(User seller) {
+        this.seller = seller;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override
