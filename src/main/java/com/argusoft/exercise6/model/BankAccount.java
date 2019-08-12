@@ -11,7 +11,7 @@ import javax.persistence.Id;
  * @author brijesh
  */
 @Entity
-public class BankAccount {
+public class BankAccount extends BillingDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

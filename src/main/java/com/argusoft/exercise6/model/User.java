@@ -55,8 +55,7 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Address> addresses = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     private List<BillingDetails> billings = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
